@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RecruiterReply — Privacy Policy</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 20px; color: #202124; line-height: 1.7; }
+    h1 { color: #1a73e8; }
+    h2 { margin-top: 32px; color: #3c4043; font-size: 18px; }
+    p, li { font-size: 15px; color: #3c4043; }
+    ul { padding-left: 20px; }
+    footer { margin-top: 48px; font-size: 13px; color: #9aa0a6; border-top: 1px solid #dadce0; padding-top: 16px; }
+  </style>
+</head>
+<body>
+  <h1>RecruiterReply — Privacy Policy</h1>
+  <p><strong>Effective date:</strong> May 11, 2026</p>
+
+  <p>
+    RecruiterReply ("the Extension") is a Chrome extension that helps recruiters draft AI-assisted
+    email replies inside Gmail. This policy explains what data the Extension accesses and how it
+    is handled.
+  </p>
+
+  <h2>Data We Access</h2>
+  <ul>
+    <li><strong>Email thread content:</strong> The Extension reads the visible text of the currently open Gmail thread solely to generate a contextual reply. This content is sent to your self-hosted backend server.</li>
+    <li><strong>User settings:</strong> Your name, company name, and backend URL are stored locally in Chrome's <code>chrome.storage.sync</code> (tied to your Google account for sync). We do not receive or store this data on any server we operate.</li>
+  </ul>
+
+  <h2>How Data Is Used</h2>
+  <ul>
+    <li>Email thread text is transmitted to the backend URL you configure (which you host yourself) for the sole purpose of generating a draft reply via the Anthropic Claude API.</li>
+    <li>No email content is stored, logged, or retained by the Extension or by any server operated by the Extension authors.</li>
+    <li>Data sent to the Anthropic API is subject to <a href="https://www.anthropic.com/privacy" target="_blank">Anthropic's Privacy Policy</a>.</li>
+  </ul>
+
+  <h2>Data Sharing</h2>
+  <p>
+    We do not sell, rent, or share your personal information or email content with any third parties,
+    except as required to operate the service (i.e., forwarding thread text to the Anthropic API
+    via your backend).
+  </p>
+
+  <h2>Data Retention</h2>
+  <p>
+    The Extension does not retain any email content. Settings stored in <code>chrome.storage.sync</code>
+    are controlled by you and can be deleted at any time by removing the Extension.
+  </p>
+
+  <h2>Permissions</h2>
+  <ul>
+    <li><strong>activeTab / host permission for mail.google.com:</strong> Required to read the email thread and inject the reply buttons into Gmail.</li>
+    <li><strong>storage:</strong> Required to save your name, company, and backend URL between sessions.</li>
+  </ul>
+
+  <h2>Children's Privacy</h2>
+  <p>This Extension is not directed at children under 13. We do not knowingly collect data from children.</p>
+
+  <h2>Changes to This Policy</h2>
+  <p>We may update this policy periodically. The effective date at the top will reflect any changes.</p>
+
+  <h2>Contact</h2>
+  <p>Questions? Open an issue on the project repository or contact the developer directly.</p>
+
+  <footer>RecruiterReply is an independent tool and is not affiliated with Google or Anthropic.</footer>
+</body>
+</html>
