@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RecruiterReply — AI-Powered Gmail Replies for Recruiters</title>
+  <meta name="description" content="Stop typing the same emails. RecruiterReply adds 6 one-click AI reply buttons to Gmail so you can process your inbox in minutes, not hours." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #1a73e8;
+      --blue-dark: #1557b0;
+      --blue-light: #e8f0fe;
+      --blue-mid: #4285f4;
+      --text: #1f2937;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --white: #ffffff;
+      --bg-light: #f9fafb;
+      --success: #16a34a;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 48px rgba(0,0,0,0.14);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: var(--text);
+      line-height: 1.6;
+      background: var(--white);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--blue);
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--blue);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--blue); }
+    .nav-cta {
+      background: var(--blue);
+      color: white !important;
+      padding: 9px 20px;
+      border-radius: 8px;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--blue-dark) !important; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #f0f5ff 0%, #e8f0fe 50%, #fff 100%);
+      padding: 96px 24px 80px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--blue-light);
+      color: var(--blue);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 99px;
+      margin-bottom: 24px;
+      border: 1px solid #c2d9fb;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      max-width: 780px;
+      margin: 0 auto 20px;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+    .hero h1 span { color: var(--blue); }
+    .hero p {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto 40px;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue);
+      color: white;
+      padding: 15px 32px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 14px rgba(26,115,232,0.35);
+    }
+    .btn-primary:hover {
+      background: var(--blue-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(26,115,232,0.4);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      color: var(--text);
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .btn-secondary:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      transform: translateY(-1px);
+    }
+    .hero-meta {
+      margin-top: 20px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .hero-preview {
+      margin: 56px auto 0;
+      max-width: 720px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .preview-bar {
+      background: #f1f3f4;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #ff5f56; }
+    .dot-y { background: #ffbd2e; }
+    .dot-g { background: #27c93f; }
+    .preview-bar span {
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 0.8rem;
+      color: #5f6368;
+    }
+    .preview-body { padding: 24px; }
+    .preview-email-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .preview-from { font-weight: 600; font-size: 0.95rem; }
+    .preview-subj { font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; }
+    .preview-text {
+      font-size: 0.88rem;
+      color: #444;
+      line-height: 1.6;
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .reply-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .reply-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .reply-btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: 1.5px solid;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .rb-interested { border-color: #16a34a; color: #16a34a; background: #f0fdf4; }
+    .rb-not { border-color: #dc2626; color: #dc2626; background: #fef2f2; }
+    .rb-info { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+    .rb-schedule { border-color: #7c3aed; color: #7c3aed; background: #f5f3ff; }
+    .rb-followup { border-color: #d97706; color: #d97706; background: #fffbeb; }
+    .rb-reject { border-color: #6b7280; color: #6b7280; background: #f9fafb; }
+
+    /* ── SECTION BASE ── */
+    section { padding: 80px 24px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.3px;
+    }
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* ── PROBLEM ── */
+    .problem { background: var(--bg-light); }
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .problem-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 36px;
+    }
+    .stat-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .stat-num {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--blue);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-label { font-size: 0.85rem; color: var(--text-muted); }
+    .problem-right { display: flex; flex-direction: column; gap: 16px; }
+    .pain-point {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .pain-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #fff3f3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .pain-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+    .pain-desc { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* ── HOW IT WORKS ── */
+    .how-it-works { text-align: center; }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 56px;
+      position: relative;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 36px;
+      left: calc(16.67% + 36px);
+      right: calc(16.67% + 36px);
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue-light), var(--blue), var(--blue-light));
+      z-index: 0;
+    }
+    .step {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .step-num {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 16px rgba(26,115,232,0.3);
+    }
+    .step h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+    .step p { font-size: 0.9rem; color: var(--text-muted); max-width: 220px; }
+
+    /* ── FEATURES ── */
+    .features { background: var(--bg-light); }
+    .features-header { margin-bottom: 56px; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .feature-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 28px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--blue-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+    .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── REPLY SHOWCASE ── */
+    .reply-showcase { padding: 80px 24px; }
+    .reply-showcase-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+    .buttons-showcase {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 40px;
+    }
+    .showcase-btn {
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border: 2px solid;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .showcase-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+    .sb-interested { border-color: #16a34a; color: #16a34a; background: #f0fdf4; }
+    .sb-not { border-color: #dc2626; color: #dc2626; background: #fef2f2; }
+    .sb-info { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+    .sb-schedule { border-color: #7c3aed; color: #7c3aed; background: #f5f3ff; }
+    .sb-followup { border-color: #d97706; color: #d97706; background: #fffbeb; }
+    .sb-reject { border-color: #6b7280; color: #6b7280; background: #f9fafb; }
+    .showcase-note {
+      margin-top: 24px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials { background: var(--blue); padding: 80px 24px; }
+    .testimonials .section-label { color: #93c5fd; }
+    .testimonials .section-title { color: white; }
+    .testimonials .section-sub { color: #bfdbfe; }
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .testi-card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .stars { color: #fbbf24; font-size: 0.9rem; letter-spacing: 2px; }
+    .testi-quote {
+      color: rgba(255,255,255,0.92);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      font-style: italic;
+    }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: white;
+      flex-shrink: 0;
+    }
+    .av1 { background: linear-gradient(135deg, #f97316, #ef4444); }
+    .av2 { background: linear-gradient(135deg, #8b5cf6, #06b6d4); }
+    .av3 { background: linear-gradient(135deg, #10b981, #3b82f6); }
+    .testi-name { font-weight: 700; color: white; font-size: 0.9rem; }
+    .testi-role { font-size: 0.78rem; color: #bfdbfe; margin-top: 2px; }
+
+    /* ── PRICING ── */
+    .pricing { padding: 80px 24px; text-align: center; }
+    .pricing-cards {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 48px;
+      flex-wrap: wrap;
+    }
+    .price-card {
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      width: 320px;
+      box-shadow: var(--shadow);
+      position: relative;
+      transition: transform 0.2s;
+    }
+    .price-card:hover { transform: translateY(-4px); }
+    .price-card.featured {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26,115,232,0.15), var(--shadow-lg);
+    }
+    .featured-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--blue);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 16px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+    .price-name { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 12px; }
+    .price-amount { font-size: 3rem; font-weight: 800; color: var(--text); line-height: 1; }
+    .price-amount span { font-size: 1rem; font-weight: 500; color: var(--text-muted); vertical-align: super; margin-right: 2px; }
+    .price-per { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; margin-bottom: 28px; }
+    .price-features { list-style: none; text-align: left; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+    .price-features li {
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .check { color: var(--success); font-weight: 700; font-size: 1rem; }
+    .price-cta {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .price-cta-outline {
+      background: white;
+      border: 1.5px solid var(--border);
+      color: var(--text);
+    }
+    .price-cta-outline:hover { border-color: var(--blue); color: var(--blue); }
+    .price-cta-filled {
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 4px 14px rgba(26,115,232,0.35);
+    }
+    .price-cta-filled:hover { background: var(--blue-dark); }
+    .pricing-note { margin-top: 24px; font-size: 0.85rem; color: var(--text-muted); }
+
+    /* ── FAQ ── */
+    .faq { background: var(--bg-light); }
+    .faq-list {
+      max-width: 700px;
+      margin: 48px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq-item {
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: var(--text);
+      text-align: left;
+      gap: 12px;
+      transition: background 0.15s;
+    }
+    .faq-question:hover { background: var(--bg-light); }
+    .faq-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--blue-light);
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+      transition: transform 0.25s;
+    }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      padding: 0 24px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+      padding: 0 24px 20px;
+    }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--blue) 0%, #1557b0 100%);
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .cta-banner h2 {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 800;
+      color: white;
+      margin-bottom: 16px;
+    }
+    .cta-banner p {
+      font-size: 1.05rem;
+      color: #bfdbfe;
+      margin-bottom: 36px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      color: var(--blue);
+      padding: 15px 32px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
+    .cta-meta { margin-top: 16px; font-size: 0.82rem; color: #93c5fd; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #111827;
+      color: #9ca3af;
+      padding: 40px 24px;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: gap;
+      gap: 16px;
+    }
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+    .footer-logo-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--blue);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 13px;
+    }
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      font-size: 0.85rem;
+      color: #9ca3af;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: white; }
+    .footer-copy { font-size: 0.8rem; margin-top: 20px; text-align: center; color: #6b7280; }
+
+    /* ── MOBILE RESPONSIVE ── */
+    @media (max-width: 768px) {
+      section { padding: 60px 20px; }
+      .nav-links { display: none; }
+      .problem-grid { grid-template-columns: 1fr; gap: 32px; }
+      .steps { grid-template-columns: 1fr; gap: 32px; }
+      .steps::before { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
+      .testi-grid { grid-template-columns: 1fr; }
+      .pricing-cards { flex-direction: column; align-items: center; }
+      .price-card { width: 100%; max-width: 360px; }
+      .footer-inner { flex-direction: column; text-align: center; }
+      .hero-actions { flex-direction: column; }
+      .btn-primary, .btn-secondary { width: 100%; max-width: 300px; justify-content: center; }
+      .problem-stats { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .reply-buttons { flex-direction: column; }
+      .buttons-showcase { flex-direction: column; align-items: center; }
+      .showcase-btn { width: 100%; max-width: 280px; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">✉</div>
+      RecruiterReply
+    </a>
+    <ul class="nav-links">
+      <li><a href="#problem">Why It Works</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#pricing" class="nav-cta">Start Free Trial</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    ✦ Now with AI-personalized message drafts
+  </div>
+  <h1>Stop Writing the Same<br /><span>Recruiter Emails</span> Over and Over</h1>
+  <p>RecruiterReply adds 6 one-click AI reply buttons directly inside Gmail. Process 50 candidate emails in the time it used to take to write 5.</p>
+  <div class="hero-actions">
+    <a href="#pricing" class="btn-primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+      Add to Chrome — It's Free
+    </a>
+    <a href="#how" class="btn-secondary">
+      See how it works
+    </a>
+  </div>
+  <p class="hero-meta">7-day free trial · No credit card required · Works in Gmail instantly</p>
+
+  <!-- Gmail preview mockup -->
+  <div class="hero-preview">
+    <div class="preview-bar">
+      <div class="dot dot-r"></div>
+      <div class="dot dot-y"></div>
+      <div class="dot dot-g"></div>
+      <span>Gmail — Inbox (47 unread)</span>
+    </div>
+    <div class="preview-body">
+      <div class="preview-email-header">
+        <div class="avatar">JK</div>
+        <div>
+          <div class="preview-from">James Kim &lt;james.kim@techcorp.io&gt;</div>
+          <div class="preview-subj">Re: Senior Product Manager Role — Interested?</div>
+        </div>
+      </div>
+      <div class="preview-text">
+        Hi Sarah, thanks for reaching out about the PM role. I've been at my current company for 3 years and am open to exploring the right opportunity. Could you share more about the team structure, comp range, and what success looks like in the first 90 days? Happy to jump on a quick call if it sounds like a fit...
+      </div>
+      <div class="reply-label">
+        ✦ RecruiterReply — Choose your response:
+      </div>
+      <div class="reply-buttons">
+        <button class="reply-btn rb-interested">✓ Interested — Let's Talk</button>
+        <button class="reply-btn rb-not">✗ Not a Fit Right Now</button>
+        <button class="reply-btn rb-info">? Request More Info</button>
+        <button class="reply-btn rb-schedule">📅 Schedule Interview</button>
+        <button class="reply-btn rb-followup">⏰ Follow Up Later</button>
+        <button class="reply-btn rb-reject">Send Polite Rejection</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="section-inner">
+    <div class="problem-grid">
+      <div>
+        <div class="section-label">The Problem</div>
+        <h2 class="section-title">Your inbox is a full-time job inside your full-time job</h2>
+        <p class="section-sub">Recruiting is about building relationships — not typing the same "thanks for your interest" email for the 40th time today. The busywork is killing your productivity and burning you out.</p>
+        <div class="problem-stats">
+          <div class="stat-card">
+            <div class="stat-num">73%</div>
+            <div class="stat-label">of recruiter emails are variations of the same 6 response types</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">2.5h</div>
+            <div class="stat-label">average daily time recruiters spend on repetitive email responses</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">47%</div>
+            <div class="stat-label">of candidates never receive a reply due to inbox overload</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">3×</div>
+            <div class="stat-label">more placements made by recruiters who respond within 2 hours</div>
+          </div>
+        </div>
+      </div>
+      <div class="problem-right">
+        <div class="pain-point">
+          <div class="pain-icon">😮‍💨</div>
+          <div>
+            <div class="pain-title">You're drowning in copy-paste</div>
+            <div class="pain-desc">Opening templates, tweaking names, adjusting tone — for emails that take 30 seconds to read and 4 minutes to write. Multiply that by 80 emails a day.</div>
+          </div>
+        </div>
+        <div class="pain-point">
+          <div class="pain-icon">⏳</div>
+          <div>
+            <div class="pain-title">Speed matters, and you're losing it</div>
+            <div class="pain-desc">The best candidates are off the market in 48 hours. A slow email response isn't just annoying — it costs you the placement and the commission.</div>
+          </div>
+        </div>
+        <div class="pain-point">
+          <div class="pain-icon">🧠</div>
+          <div>
+            <div class="pain-title">Decision fatigue hits by noon</div>
+            <div class="pain-desc">Every tiny email decision drains mental energy you need for strategy, sourcing, and actual candidate conversations. The admin is eating you alive.</div>
+          </div>
+        </div>
+        <div class="pain-point">
+          <div class="pain-icon">📉</div>
+          <div>
+            <div class="pain-title">Ghosted candidates hurt your reputation</div>
+            <div class="pain-desc">Candidates talk. Leaving people in the dark — even when it's just a "not right now" — damages your personal brand and your firm's reputation on Glassdoor.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works" id="how">
+  <div class="section-inner">
+    <div class="section-label" style="text-align:center">How It Works</div>
+    <h2 class="section-title" style="text-align:center">Up and running in under 60 seconds</h2>
+    <p class="section-sub" style="margin:0 auto; text-align:center">No training, no setup, no IT ticket. RecruiterReply plugs directly into the Gmail you already use.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Install the Extension</h3>
+        <p>One click from the Chrome Web Store. No account setup, no data migration, no onboarding call.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Open Any Email in Gmail</h3>
+        <p>RecruiterReply automatically appears beneath every email you open. Six reply buttons, always ready.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Click Once, Send in Seconds</h3>
+        <p>AI drafts a personalized, professional reply in context. Review it, tweak if needed, hit send. Done.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REPLY BUTTONS SHOWCASE -->
+<section class="reply-showcase">
+  <div class="reply-showcase-inner">
+    <div class="section-label">6 One-Click Replies</div>
+    <h2 class="section-title">Every response a recruiter needs, covered</h2>
+    <p class="section-sub" style="margin:0 auto;">Whether you're moving a candidate forward, closing the loop, or keeping a relationship warm — there's a button for it.</p>
+    <div class="buttons-showcase">
+      <button class="showcase-btn sb-interested">✓ Interested — Let's Talk</button>
+      <button class="showcase-btn sb-not">✗ Not a Fit Right Now</button>
+      <button class="showcase-btn sb-info">? Request More Info</button>
+      <button class="showcase-btn sb-schedule">📅 Schedule Interview</button>
+      <button class="showcase-btn sb-followup">⏰ Follow Up Later</button>
+      <button class="showcase-btn sb-reject">Send Polite Rejection</button>
+    </div>
+    <p class="showcase-note">Each response is AI-personalized using the candidate's name, context from their email, and your tone preferences.</p>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-inner">
+    <div class="features-header">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Built specifically for how recruiters work</h2>
+      <p class="section-sub">Not a generic AI writing tool. Not a clunky CRM add-on. Purpose-built for the recruiter inbox.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>One-Click AI Drafts</h3>
+        <p>Our AI reads the candidate's email, understands the context, and drafts a reply that sounds like you — not a robot. Ready to send in under 3 seconds.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3>Tone Customization</h3>
+        <p>Set your communication style once — formal, friendly, direct — and every draft matches your voice. Candidates get a consistent experience every time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📧</div>
+        <h3>Native Gmail Integration</h3>
+        <p>Works directly inside Gmail with zero friction. No new app to learn, no browser tab switching. The buttons appear right where you're already working.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✏️</div>
+        <h3>Always Editable</h3>
+        <p>AI drafts are a starting point, not a cage. Edit anything before sending. Add specific details, adjust the tone, or add your Calendly link in one click.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Private & Secure</h3>
+        <p>Your email content is never stored or used to train AI models. All processing happens in real time and is discarded immediately. Your data stays yours.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Response Rate Insights</h3>
+        <p>See which reply types get the most engagement. Learn what's working across your outreach so you can refine your approach and close more placements.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="section-inner">
+    <div class="section-label">Testimonials</div>
+    <h2 class="section-title">Recruiters who get their afternoons back</h2>
+    <p class="section-sub">Real feedback from recruiters who were skeptical — and now can't imagine their inbox without it.</p>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-quote">"I was drowning in 80+ emails a day and spending my evenings just catching up on inbox. RecruiterReply cut my email time by more than half — I'm talking from 3 hours down to about 70 minutes. The AI replies aren't robotic either. A candidate actually told me my 'rejection email was the nicest they'd ever received.' That's never happened before."</p>
+        <div class="testi-author">
+          <div class="testi-avatar av1">MR</div>
+          <div>
+            <div class="testi-name">Madison Reynolds</div>
+            <div class="testi-role">Senior Technical Recruiter · Apex Talent Group</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-quote">"I place engineers, so speed is everything — these guys are off the market in 24 hours. Before RecruiterReply I'd lose candidates just because my response was too slow. Now I can reply to 15 emails in 10 minutes without sounding like I'm copy-pasting. My placement rate went up noticeably in my first month using it. Worth every penny of the subscription."</p>
+        <div class="testi-author">
+          <div class="testi-avatar av2">DK</div>
+          <div>
+            <div class="testi-name">Daniel Kowalski</div>
+            <div class="testi-role">Tech Recruiter · Velocity Hire</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-quote">"I manage a team of 8 recruiters and I rolled RecruiterReply out to the whole team. In the first two weeks we tracked a 40% reduction in email response time across the board. The tone customization is what sold me — each recruiter keeps their own voice, so it still feels personal. If you're running a recruiting team and not using this, you're leaving efficiency on the table."</p>
+        <div class="testi-author">
+          <div class="testi-avatar av3">TL</div>
+          <div>
+            <div class="testi-name">Tanya Liu</div>
+            <div class="testi-role">VP of Talent Acquisition · NorthBridge Staffing</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-inner">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Simple, transparent pricing</h2>
+    <p class="section-sub" style="margin:0 auto;">Start free. Upgrade when you're convinced — and you will be.</p>
+    <div class="pricing-cards">
+      <div class="price-card">
+        <div class="price-name">Free Trial</div>
+        <div class="price-amount"><span>$</span>0</div>
+        <div class="price-per">for 7 days, no credit card needed</div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> All 6 one-click reply buttons</li>
+          <li><span class="check">✓</span> Full AI draft generation</li>
+          <li><span class="check">✓</span> Unlimited emails for 7 days</li>
+          <li><span class="check">✓</span> Tone customization</li>
+          <li><span class="check">✓</span> Gmail integration</li>
+        </ul>
+        <a href="#" class="price-cta price-cta-outline">Start Free Trial</a>
+      </div>
+      <div class="price-card featured">
+        <div class="featured-badge">Most Popular</div>
+        <div class="price-name">Pro</div>
+        <div class="price-amount"><span>$</span>39</div>
+        <div class="price-per">per month, billed monthly · cancel anytime</div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Everything in Free Trial</li>
+          <li><span class="check">✓</span> Unlimited emails, forever</li>
+          <li><span class="check">✓</span> Response rate analytics</li>
+          <li><span class="check">✓</span> Custom reply templates</li>
+          <li><span class="check">✓</span> Priority email support</li>
+          <li><span class="check">✓</span> Calendly &amp; scheduling links</li>
+          <li><span class="check">✓</span> Team seat discounts available</li>
+        </ul>
+        <a href="#" class="price-cta price-cta-filled">Get Started — 7 Days Free</a>
+      </div>
+    </div>
+    <p class="pricing-note">Need team pricing? <a href="mailto:hello@recruiterreply.com" style="color:var(--blue);text-decoration:none;font-weight:600;">Contact us</a> for volume discounts on 5+ seats.</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-inner">
+    <div class="section-label" style="text-align:center">FAQ</div>
+    <h2 class="section-title" style="text-align:center">Questions we get all the time</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Does RecruiterReply read or store my emails?
+          <div class="faq-icon">+</div>
+        </button>
+        <div class="faq-answer">
+          No. RecruiterReply processes email content in real time only to generate your reply draft — it's never stored on our servers, never used to train AI models, and never shared with third parties. The processing happens locally in your browser session and is discarded the moment your draft is generated. Your candidate data and email content are completely private.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Will the AI replies sound generic or robotic?
+          <div class="faq-icon">+</div>
+        </button>
+        <div class="faq-answer">
+          No — that's exactly what we built against. RecruiterReply reads the candidate's actual email to pull in relevant details (their name, what role they mentioned, specific questions they asked) and writes a reply in your chosen tone. The result sounds like a thoughtful human response, not a form letter. You can also edit any draft before sending, so you always have full control over what goes out.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Does it work with my Gmail account — including work/Google Workspace?
+          <div class="faq-icon">+</div>
+        </button>
+        <div class="faq-answer">
+          Yes. RecruiterReply works with personal Gmail accounts and Google Workspace (formerly G Suite) accounts used at your company or agency. It works in the standard Gmail web interface on Chrome. If your organization restricts Chrome extensions via MDM policy, you may need to ask your IT admin to approve it — we provide a straightforward approval guide to help with that.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          What happens after my 7-day trial ends?
+          <div class="faq-icon">+</div>
+        </button>
+        <div class="faq-answer">
+          After 7 days, you'll be prompted to enter a payment method to continue. Your reply buttons will stop generating AI drafts if you don't upgrade, but nothing is deleted — if you decide to subscribe later, everything picks right back up. There's no pressure, no auto-charge surprise, and no credit card required to start the trial. Cancel anytime from your account page in under 30 seconds.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Can I use this for a whole recruiting team?
+          <div class="faq-icon">+</div>
+        </button>
+        <div class="faq-answer">
+          Absolutely — and it's how many of our best customers use it. Each recruiter installs the extension on their own Chrome, and each account maintains its own tone settings and response history. We offer volume discounts for teams of 5 or more seats. Email us at hello@recruiterreply.com and we'll put together a team pricing quote within one business day.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <h2>Ready to Reclaim Your Day?</h2>
+  <p>Join thousands of recruiters who've cut their email time in half. Start your free 7-day trial — no credit card, no commitment.</p>
+  <a href="#" class="btn-white">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+    Add RecruiterReply to Chrome — Free
+  </a>
+  <p class="cta-meta">7-day free trial · No credit card · Works in 60 seconds</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <a href="#" class="footer-logo">
+      <div class="footer-logo-icon">✉</div>
+      RecruiterReply
+    </a>
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="mailto:hello@recruiterreply.com">hello@recruiterreply.com</a>
+    </div>
+  </div>
+  <p class="footer-copy">© 2026 RecruiterReply. All rights reserved. Made for recruiters, by people who respect your time.</p>
+</footer>
+
+<script>
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Subtle entrance animations on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feature-card, .testi-card, .step, .stat-card, .pain-point').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
